@@ -20,15 +20,8 @@
                         var grammartext = input.ReadToEnd();
 
                         verd.ParseGrammar(grammartext);
-                        try
-                        {
-                                string program = verd.GenerateProgram("Program");
-                                Console.WriteLine(program);
-                        }
-                        catch (Exception e)
-                        {
-                                Console.WriteLine(e.Message);
-                        }
+                        string program = verd.GenerateProgram("Program");
+                        Console.WriteLine(program);
                 }
         }
 }

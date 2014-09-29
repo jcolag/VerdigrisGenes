@@ -93,46 +93,24 @@
                 {
                         char[] space = { ' ' };
                         string[] parts;
-                        try
-                        {
-                                parts = original.Split(space);
-                        }
-                        catch (Exception e)
-                        {
-                                Console.WriteLine(e.Message);
-                                return string.Empty;
-                        }
+                        parts = original.Split(space);
 
                         string result = string.Empty;
 
-                        try
+                        foreach (string part in parts)
                         {
-                                foreach (string part in parts)
+                                if (part.ToLower() == part)
                                 {
-                                        if (part.ToLower() == part)
-                                        {
-                                                Console.WriteLine("terminal '" + part + "'");
-                                                result += part + " ";
-                                        }
-                                        else
-                                        {
-                                                string fullpart = this.Choose(part.Trim());
-                                                Console.WriteLine("non-terminal '" + part + "' => '" + fullpart + "'");
-                                                try
-                                                {
-                                                        fullpart = this.Fill(fullpart);
-                                                        result += fullpart + " ";
-                                                }
-                                                catch
-                                                {
-                                                        result += "!!" + part + "!! ";
-                                                }
-                                        }
+                                        Console.WriteLine("terminal '" + part + "'");
+                                        result += part + " ";
                                 }
-                        }
-                        catch (Exception e)
-                        {
-                                Console.WriteLine(e.Message);
+                                else
+                                {
+                                        string fullpart = this.Choose(part.Trim());
+                                        Console.WriteLine("non-terminal '" + part + "' => '" + fullpart + "'");
+                                        fullpart = this.Fill(fullpart);
+                                        result += fullpart + " ";
+                                }
                         }
 
                         return result.Trim();
