@@ -1,21 +1,42 @@
-﻿namespace VerdigrisGenes
+﻿// <copyright file="Grammar.cs" company="John Colagioia">
+//     John.Colagioia.net. Licensed under the GPLv3
+// </copyright>
+// <author>John Colagioia</author>
+namespace VerdigrisGenes
 {
         using System;
         using System.Collections.Generic;
         using System.Text.RegularExpressions;
 
+        /// <summary>
+        /// Language Grammar.
+        /// </summary>
         public class Grammar
         {
+                /// <summary>
+                /// The grammar productions.
+                /// </summary>
                 private Dictionary<string, List<string>> productions;
 
+                /// <summary>
+                /// The random number generator.
+                /// </summary>
                 private Random rand;
 
+                /// <summary>
+                /// Initializes a new instance of the <see cref="VerdigrisGenes.Grammar"/> class.
+                /// </summary>
                 public Grammar()
                 {
-                        productions = new Dictionary<string, List<string>>();
-                        rand = new Random();
+                        this.productions = new Dictionary<string, List<string>>();
+                        this.rand = new Random();
                 }
 
+                /// <summary>
+                /// Add the specified production.
+                /// </summary>
+                /// <param name="production">The grammar production.</param>
+                /// <returns>Count of grammar productions added.</returns>
                 public int Add(string production)
                 {
                         string newline = Environment.NewLine;
@@ -51,6 +72,7 @@
                         {
                                 Console.WriteLine("Mismatch for " + key);
                         }
+
                         char[] pipe = { '|' };
                         string[] values = kv[1].Split(pipe);
 
@@ -60,11 +82,16 @@
                         }
 
                         var results = new List<string>(values);
-                        productions.Add(key, results);
+                        this.productions.Add(key, results);
                         Console.WriteLine("Added key " + key + " with " + results.Count.ToString() + " items.");
                         return results.Count;
                 }
 
+                /// <summary>
+                /// Choose syntax based on the specified key.
+                /// </summary>
+                /// <param name="key">Non-terminal key.</param>
+                /// <returns>Replacement string.</returns>
                 public string Choose(string key)
                 {
                         string k = key.ToUpper();
@@ -75,8 +102,8 @@
                                 return string.Empty;
                         }
 
-                        List<string> options = productions[k];
-                        int idx = rand.Next(options.Count);
+                        List<string> options = this.productions[k];
+                        int idx = this.rand.Next(options.Count);
                         string result = "//";
                         try
                         {
@@ -86,9 +113,15 @@
                         {
                                 Console.WriteLine("Choose failed!");
                         }
+
                         return result == "//" ? string.Empty : result;
                 }
 
+                /// <summary>
+                /// Fill the specified grammar non-terminal.
+                /// </summary>
+                /// <param name="original">Original non-terminal.</param>
+                /// <returns>Replacement string.</returns>
                 public string Fill(string original)
                 {
                         char[] space = { ' ' };

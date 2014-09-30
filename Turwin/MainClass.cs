@@ -1,11 +1,22 @@
-﻿namespace Turwin
+﻿// <copyright file="MainClass.cs" company="John Colagioia">
+//     John.Colagioia.net. Licensed under the GPLv3
+// </copyright>
+// <author>John Colagioia</author>
+namespace Turwin
 {
         using System;
         using System.IO;
         using VerdigrisGenes;
 
-        class MainClass
+        /// <summary>
+        /// Main class.
+        /// </summary>
+        public class MainClass
         {
+                /// <summary>
+                /// The entry point of the program, where the program control starts and ends.
+                /// </summary>
+                /// <param name="args">The command-line arguments.</param>
                 public static void Main(string[] args)
                 {
                         var verd = new Verdigris();
