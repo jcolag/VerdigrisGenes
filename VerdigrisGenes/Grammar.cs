@@ -24,6 +24,11 @@ namespace VerdigrisGenes
                 private Random rand;
 
                 /// <summary>
+                /// The number of declared variables.
+                /// </summary>
+                private int declaredVariables = 0;
+
+                /// <summary>
                 /// Initializes a new instance of the <see cref="VerdigrisGenes.Grammar"/> class.
                 /// </summary>
                 public Grammar()
@@ -96,6 +101,20 @@ namespace VerdigrisGenes
                 {
                         string k = key.ToUpper();
 
+                        if (key.StartsWith("@", StringComparison.CurrentCulture))
+                        {
+                                switch (key)
+                                {
+                                case "@Declare":
+                                        ++this.declaredVariables;
+                                        return "v" + this.declaredVariables.ToString();
+                                case "@Variable":
+                                        return "v" + (this.rand.Next(this.declaredVariables) + 1).ToString();
+                                case "@Number":
+                                        return this.rand.Next().ToString();
+                                }
+                        }
+
                         if (!this.productions.ContainsKey(k))
                         {
                                 Console.WriteLine("Key " + key + " not found.");
@@ -124,9 +143,8 @@ namespace VerdigrisGenes
                 /// <returns>Replacement string.</returns>
                 public string Fill(string original)
                 {
-                        char[] space = { ' ' };
                         string[] parts;
-                        parts = original.Split(space);
+                        parts = Regex.Split(original, @"\s+");
 
                         string result = string.Empty;
 
