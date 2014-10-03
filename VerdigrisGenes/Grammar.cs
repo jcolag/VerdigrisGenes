@@ -16,7 +16,7 @@ namespace VerdigrisGenes
                 /// <summary>
                 /// The grammar productions.
                 /// </summary>
-                private Dictionary<string, List<string>> productions;
+                private Dictionary<string, List<GrammarExpression>> productions;
 
                 /// <summary>
                 /// The random number generator.
@@ -33,7 +33,7 @@ namespace VerdigrisGenes
                 /// </summary>
                 public Grammar()
                 {
-                        this.productions = new Dictionary<string, List<string>>();
+                        this.productions = new Dictionary<string, List<GrammarExpression>>();
                         this.rand = new Random();
                 }
 
@@ -80,13 +80,14 @@ namespace VerdigrisGenes
 
                         char[] pipe = { '|' };
                         string[] values = kv[1].Split(pipe);
+                        var results = new List<GrammarExpression>();
 
                         for (int idx = 0; idx < values.Length; idx++)
                         {
                                 values[idx] = values[idx].Trim();
+                                results.Add(new GrammarExpression(values[idx], null, 0));
                         }
 
-                        var results = new List<string>(values);
                         this.productions.Add(key, results);
                         Console.WriteLine("Added key " + key + " with " + results.Count.ToString() + " items.");
                         return results.Count;
@@ -121,12 +122,12 @@ namespace VerdigrisGenes
                                 return string.Empty;
                         }
 
-                        List<string> options = this.productions[k];
+                        List<GrammarExpression> options = this.productions[k];
                         int idx = this.rand.Next(options.Count);
                         string result = "//";
                         try
                         {
-                                result = options[idx].Trim();
+                                result = options[idx].Expression.Trim();
                         }
                         catch
                         {
