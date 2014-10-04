@@ -29,6 +29,11 @@ namespace VerdigrisGenes
                 private int declaredVariables = 0;
 
                 /// <summary>
+                /// The symbol table.
+                /// </summary>
+                private List<Variable> symbolTable = new List<Variable>();
+
+                /// <summary>
                 /// Initializes a new instance of the <see cref="VerdigrisGenes.Grammar"/> class.
                 /// </summary>
                 public Grammar()
@@ -108,9 +113,13 @@ namespace VerdigrisGenes
                                 {
                                 case "@Declare":
                                         ++this.declaredVariables;
-                                        return "v" + this.declaredVariables.ToString();
+                                        string name = "v" + this.declaredVariables.ToString();
+                                        symbolTable.Add(new Variable(name));
+                                        return name;
                                 case "@Variable":
-                                        return "v" + (this.rand.Next(this.declaredVariables) + 1).ToString();
+                                        int which = this.rand.Next(symbolTable.Count);
+                                        Variable v = symbolTable[which];
+                                        return v.Name;
                                 case "@Number":
                                         return this.rand.Next().ToString();
                                 }
