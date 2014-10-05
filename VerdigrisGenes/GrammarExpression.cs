@@ -6,14 +6,14 @@ namespace VerdigrisGenes
         {
                 private readonly string expression;
 
-                private readonly string condition;
+                private readonly bool reqValue;
 
-                private readonly int initialize;
+                private readonly bool initialize;
 
-                public GrammarExpression(string expr, string cond, int init)
+                public GrammarExpression(string expr, bool needValue, bool init)
                 {
                         this.expression = expr;
-                        this.condition = cond;
+                        this.reqValue = needValue;
                         this.initialize = init;
                 }
 
@@ -25,15 +25,15 @@ namespace VerdigrisGenes
                         }
                 }
 
-                public string Condition
+                public bool ReqValue
                 {
                         get
                         {
-                                return condition;
+                                return reqValue;
                         }
                 }
 
-                public int Initialize
+                public bool Initialize
                 {
                         get
                         {

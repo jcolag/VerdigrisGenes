@@ -8,6 +8,8 @@ namespace VerdigrisGenes
 
                 private bool initialized = false;
 
+                private bool toInitialize = false;
+
                 public Variable(string name)
                 {
                         this.name = name;
@@ -31,6 +33,23 @@ namespace VerdigrisGenes
                         set
                         {
                                 this.initialized = value;
+                        }
+                }
+
+                public bool ToInitialize
+                {
+                        set
+                        {
+                                toInitialize = value;
+                        }
+                }
+
+                public void Update()
+                {
+                        if (this.toInitialize)
+                        {
+                                this.initialized = true;
+                                this.toInitialize = false;
                         }
                 }
         }

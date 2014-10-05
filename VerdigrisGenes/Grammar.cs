@@ -84,13 +84,24 @@ namespace VerdigrisGenes
                         }
 
                         char[] pipe = { '|' };
+                        char[] hash = { '#' };
                         string[] values = kv[1].Split(pipe);
                         var results = new List<GrammarExpression>();
 
                         for (int idx = 0; idx < values.Length; idx++)
                         {
-                                values[idx] = values[idx].Trim();
-                                results.Add(new GrammarExpression(values[idx], null, 0));
+                                string[] parts = values[idx].Split(hash);
+                                string expr = parts[0].Trim();
+                                bool req = false;
+                                bool init = false;
+
+                                if (parts.Length > 1)
+                                {
+                                        req = parts[1].Contains("init");
+                                }
+
+                                init |= parts.Length > 2;
+                                results.Add(new GrammarExpression(expr, req, init));
                         }
 
                         this.productions.Add(key, results);
@@ -109,6 +120,9 @@ namespace VerdigrisGenes
 
                         if (key.StartsWith("@", StringComparison.CurrentCulture))
                         {
+                                int which;
+                                Variable v;
+
                                 switch (key)
                                 {
                                 case "@Declare":
@@ -117,8 +131,19 @@ namespace VerdigrisGenes
                                         symbolTable.Add(new Variable(name));
                                         return name;
                                 case "@Variable":
-                                        int which = this.rand.Next(symbolTable.Count);
-                                        Variable v = symbolTable[which];
+                                        which = this.rand.Next(symbolTable.Count);
+                                        v = symbolTable[which];
+                                        v.ToInitialize = true;
+                                        return v.Name;
+                                case "@Initialized":
+                                        List<Variable> initialized = this.symbolTable.FindAll(x=>x.Initialized);
+                                        if (initialized.Count == 0)
+                                        {
+                                                return "novariable";
+                                        }
+
+                                        which = this.rand.Next(initialized.Count);
+                                        v = initialized[which];
                                         return v.Name;
                                 case "@Number":
                                         return this.rand.Next().ToString();
@@ -132,6 +157,11 @@ namespace VerdigrisGenes
                         }
 
                         List<GrammarExpression> options = this.productions[k];
+                        if (symbolTable.FindAll(var=>var.Initialized).Count == 0)
+                        {
+                                options = options.FindAll(ge => !ge.ReqValue);
+                        }
+
                         int idx = this.rand.Next(options.Count);
                         string result = "//";
                         try
@@ -162,6 +192,14 @@ namespace VerdigrisGenes
                         {
                                 if (part.ToLower() == part)
                                 {
+                                        if (part == ";")
+                                        {
+                                                foreach (Variable v in symbolTable)
+                                                {
+                                                        v.Update();
+                                                }
+                                        }
+
                                         Console.WriteLine("terminal '" + part + "'");
                                         result += part + " ";
                                 }
