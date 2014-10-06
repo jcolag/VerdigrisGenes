@@ -105,7 +105,6 @@ namespace VerdigrisGenes
                         }
 
                         this.productions.Add(key, results);
-                        Console.WriteLine("Added key " + key + " with " + results.Count.ToString() + " items.");
                         return results.Count;
                 }
 
@@ -200,13 +199,11 @@ namespace VerdigrisGenes
                                                 }
                                         }
 
-                                        Console.WriteLine("terminal '" + part + "'");
                                         result += part + " ";
                                 }
                                 else
                                 {
                                         string fullpart = this.Choose(part.Trim());
-                                        Console.WriteLine("non-terminal '" + part + "' => '" + fullpart + "'");
                                         fullpart = this.Fill(fullpart);
                                         result += fullpart + " ";
                                 }

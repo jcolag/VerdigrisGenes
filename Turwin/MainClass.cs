@@ -20,6 +20,7 @@ namespace Turwin
                 public static void Main(string[] args)
                 {
                         var verd = new Verdigris();
+                        string nl = Environment.NewLine;
 
                         if (args.Length == 0)
                         {
@@ -32,7 +33,7 @@ namespace Turwin
 
                         verd.ParseGrammar(grammartext);
                         string program = verd.GenerateProgram("Program");
-                        Console.WriteLine(program);
+                        Console.WriteLine(program.Replace(" ;", nl).Replace(nl + " ", nl));
                 }
         }
 }
