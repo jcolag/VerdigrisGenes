@@ -21,85 +21,153 @@ Example
 
 To reiterate the status, _VerdigrisGenes_ only generates a random program, at this point, so there isn't all that much to show.  However, given a stripped-down imperative programming language like this:
 
-    Program ::= Statement
-              | Statement
-                Program
+    Program ::= Declare Code
     
-    Statement ::= input v Number
-                | output v Number
-                | let v Number <- Expr
-                | Loop
-                | Conditional
+    Declare ::= define Varlist ;
     
-    Loop ::= while Comparison
-               Program
-             end while
+    Varlist ::= @Declare
+        | @Declare Varlist
     
-    Conditional ::= if Comparison
-                      Program
-                    end if
+    Code ::= Statement ;
+        | Statement ; Code
+    
+    Statement ::= input @Variable # # x
+        | output @Initialized # init
+        | let @Variable <- Expr # # x
+        | Loop
+        | Conditional
+    
+    Loop ::= while ( Comparison ) ; Code end while
+    
+    Conditional ::= if ( Comparison ) ; Code end if
     
     Comparison ::= Value Compare Value
     
     Compare ::= >
-              | >=
-              | =
-              | <=
-              | <
+        | >=
+        | =
+        | <=
+        | <
     
-    Expr ::= Value + Value
-           | Value - Value
-           | Value * Value
-           | Value / Value
+    Expr ::= Value
+        | Value Op Value
     
-    Value ::= Number
-            | v Number
+    Op ::= +
+        | -
+        | *
+        | /
     
-    Number ::= Digit
-             | Digit Number
-    
-    Digit ::= 1
-            | 2
-            | 3
-            | 4
-            | 5
-            | 6
-            | 7
-            | 8
-            | 9
-            | 0
+    Value ::= @Number
+        | @Initialized # init
 
 The original version of this language had fuller expressions, but regularly bombed out with a stack overflow.  Eventually, I'll make the program non-recursive, but simpler expressions was more expedient.
 
 It comes out pretty poorly-formatted, of course, but a reformatted result looks something like...
 
-    while v62985 = v7
-        if v2 < 01
-            while v4 > 1339
-                let v1 <- 0 * v50
+    define v1 v2 v3 v4 v5 v6 v7 v8 v9
+    if ( 786335239 > 755784541 )
+        while ( 605517595 <= 38486659 )
+            input v8
+            let v8 <- v8
+            if ( 89742393 > v8 )
+                if ( 673648782 >= 1434017890 )
+                    output v8
+                    let v1 <- 1348233004 + v8
+                end if
+            end if
+            while ( 1951796450 >= v8 )
+                let v2 <- 977605682 + v8
             end while
-            while v7 > 9
-                input v61
-            end while
-            while 4436 <= v8
-                output v4
-                input v2765
-            end while
-            let v3 <- 7 - v5
-        end if
-        output v6
-        while v6 = 780
-            if v8 > v07
-                input v407
-                if 0 = v8
-                    output v86
-                    let v8 <- v1085 * 7
+        end while
+    end if
+    if ( 81789079 <= v1 )
+        output v8
+        while ( v2 = 928878049 )
+            output v2
+            if ( v1 < 489661939 )
+                if ( 2027429293 = v1 )
+                    if ( 1695857986 > 21374349 )
+                        if ( 1276753592 < v2 )
+                            input v3
+                            while ( v3 = v2 )
+                                input v7
+                                if ( 1084839086 > 103212587 )
+                                    output v2
+                                end if
+                            end while
+                            while ( v3 = 1409505925 )
+                                while ( v7 >= v7 )
+                                    input v3
+                                end while
+                            end while
+                            while ( 1020645337 >= 217506125 )
+                                output v8
+                                output v2
+                                if ( v3 >= 651753342 )
+                                    let v7 <- v3 * 1516917728
+                                end if
+                                input v4
+                            end while
+                        end if
+                        input v5
+                        if ( 1022533319 <= 959818496 )
+                            output v5
+                        end if
+                    end if
+                    input v5
                 end if
             end if
         end while
+    end if
+    if ( 2143841460 = 650882524 )
+        let v1 <- v8
+        input v5
+    end if
+    if ( 1796686360 <= v3 )
+        if ( v5 <= 1498654852 )
+            output v1
+            output v3
+        end if
+        output v4
+        if ( 1573723323 < v1 )
+            while ( 1646100152 = 41144584 )
+                input v5
+                input v4
+            end while
+        let v3 <- 1931910887 - 763085573
+        end if
+    end if
+    output v7
+    while ( v2 >= 1621219584 )
+        let v2 <- v2
     end while
+    if ( 2069552253 <= v4 )
+        input v5
+        if ( v2 < 1441526126 )
+            while ( v8 >= 636232699 )
+                let v3 <- 1662628483
+                while ( v3 > v7 )
+                    output v4
+                end while
+            end while
+        end if
+        while ( v3 >= 37273055 )
+            output v2
+            output v2
+            let v8 <- 976603404
+        end while
+        if ( v1 < 1947080969 )
+            input v3
+            input v9
+            output v3
+        end if
+    end if
+    while ( 364908657 <= 385470572 )
+        input v2
+    end while
+    output v1
 
-Because we have no sense of variables, this is obviously nonsense.  However, it has the virtue right off the bat of clearly being syntactically valid.  (Technically, it isn't, because the numbers are generated one character at a time and have spaces in them, but the goal is to move the values into the genes.)
+This is obviously nonsensical.  However, it has the virtue right off the bat of clearly being syntactically valid.
 
 Genetics
 --------
@@ -120,14 +188,54 @@ The plan will undoubtedly evolve as I fiddle with the idea, but my current plan 
 
 I suspect these will each be sequences of numbers cut somehow (modulus seems too unpredictable) to the range that makes sense in context.
 
+Right now, due to the architecture of the program, there are only four chromosomes.
+
+ - Numerical constants
+
+ - Variable references
+
+ - _Initialized_ variable references
+
+ - Choice of expression in a grammar production
+
+This is primarily because the grammar currently doesn't know anything about what _kind_ of production it is, so the software can't easily determine whether we're looking at a statement-level choice or not.  By contrast, since the variables and numbers are handled separately, this already has a special code path.
+
+The effect is that a genome file such as this...
+
+    2 3 5 7 11 13 17 23 29 31 37
+    0 3 6 0 3 6 0 3 6 0 3 6 0 3 6
+    0 0 1 0 0 1 0 0 1 0 0 1 0 0 1
+    0 0 1 1 1 1 1 1 1 1 0 1 3 0 0 0 1 0 0 1 0 0 0 3 0 0 0 1 1 1 4 0 0 1 3 0 1 2 1 0 2 1 0 4 0 0 0 3 0 0 1 0 4 0 0 0 0 1 1 0 0 1
+
+...now reliably produces...
+
+    define v1 v2 v3 v4 v5 v6 v7 v8 v9
+    if ( 2 >= 3 )
+        let v1 <- 5
+    end if
+    while ( 7 >= v1 )
+        if ( v1 <= 11 )
+            let v4 <- 13 * v1
+            if ( 17 <= 23 )
+                output v1
+            end if
+        end if
+        if ( 29 > v1 )
+            input v7
+            output v4
+        end if
+    end while
+
+
+
 Future Path
 -----------
 
 I'll mostly go whereever there seems to be something interesting, but things that come to mind immediately include.
 
- - [ ] Implement a symbol table and variable declaration.
+ - [X] Implement a symbol table and variable declaration.
 
- - [ ] Hook the selection of program elements to genes.
+ - [X] Hook the selection of program elements to genes.
 
  - [ ] Write an interpreter for the language.
 
