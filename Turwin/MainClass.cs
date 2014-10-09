@@ -24,14 +24,23 @@ namespace Turwin
 
                         if (args.Length == 0)
                         {
-                                Console.WriteLine("Requires a parameter indicating grammar file.");
+                                Console.WriteLine("Requires a parameter indicating a grammar file and a genome file.");
                                 return;
                         }
 
                         var input = File.OpenText(args[0]);
                         var grammartext = input.ReadToEnd();
-
+                        input.Close();
                         verd.ParseGrammar(grammartext);
+
+                        if (args.Length > 1)
+                        {
+                                input = File.OpenText(args[1]);
+                                var genometext = input.ReadToEnd();
+                                input.Close();
+                                verd.ReplaceChromosomes(genometext);
+                        }
+
                         string program = verd.GenerateProgram("Program");
                         Console.WriteLine(program.Replace(" ;", nl).Replace(nl + " ", nl));
                 }

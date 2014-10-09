@@ -35,6 +35,8 @@
     <Compile Include="Grammar.cs" />
     <Compile Include="GrammarExpression.cs" />
     <Compile Include="Variable.cs" />
+    <Compile Include="NumberGenerator.cs" />
+    <Compile Include="Chromosome.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

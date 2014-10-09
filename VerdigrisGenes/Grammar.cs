@@ -13,15 +13,19 @@ namespace VerdigrisGenes
         /// </summary>
         public class Grammar
         {
+                private readonly string[] chromosomeNames = {
+                        "Number",
+                        "Variable",
+                        "Initialized",
+                        "Production"
+                };
+
+                private NumberGenerator ng;
+
                 /// <summary>
                 /// The grammar productions.
                 /// </summary>
                 private Dictionary<string, List<GrammarExpression>> productions;
-
-                /// <summary>
-                /// The random number generator.
-                /// </summary>
-                private Random rand;
 
                 /// <summary>
                 /// The number of declared variables.
@@ -39,7 +43,22 @@ namespace VerdigrisGenes
                 public Grammar()
                 {
                         this.productions = new Dictionary<string, List<GrammarExpression>>();
-                        this.rand = new Random();
+                        this.ng = new NumberGenerator();
+                }
+
+                public int ReplaceChromosomes(string genes)
+                {
+                        char[] nl = { '\n', '\r' };
+                        string[] lines = genes.Split(nl);
+                        int index = 0;
+
+                        foreach (string name in chromosomeNames)
+                        {
+                                string line = lines[index];
+                                ++index;
+                                this.ng.Load(name, line);
+                        }
+                        return lines.Length;
                 }
 
                 /// <summary>
@@ -130,22 +149,22 @@ namespace VerdigrisGenes
                                         symbolTable.Add(new Variable(name));
                                         return name;
                                 case "@Variable":
-                                        which = this.rand.Next(symbolTable.Count);
+                                        which = this.ng.Next("Variable", symbolTable.Count);
                                         v = symbolTable[which];
                                         v.ToInitialize = true;
                                         return v.Name;
                                 case "@Initialized":
-                                        List<Variable> initialized = this.symbolTable.FindAll(x=>x.Initialized);
+                                        List<Variable> initialized = this.symbolTable.FindAll(x => x.Initialized);
                                         if (initialized.Count == 0)
                                         {
                                                 return "novariable";
                                         }
 
-                                        which = this.rand.Next(initialized.Count);
+                                        which = this.ng.Next("Initialized", initialized.Count);
                                         v = initialized[which];
                                         return v.Name;
                                 case "@Number":
-                                        return this.rand.Next().ToString();
+                                        return this.ng.Next("Number").ToString();
                                 }
                         }
 
@@ -161,7 +180,7 @@ namespace VerdigrisGenes
                                 options = options.FindAll(ge => !ge.ReqValue);
                         }
 
-                        int idx = this.rand.Next(options.Count);
+                        int idx = this.ng.Next("Production", options.Count);
                         string result = "//";
                         try
                         {
