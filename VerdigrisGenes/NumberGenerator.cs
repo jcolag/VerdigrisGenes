@@ -53,7 +53,9 @@
                         int value = chr.Next();
                         if (value == int.MinValue)
                         {
-                                return this.rand.Next();
+                                int next = this.rand.Next();
+                                chr.Add(next);
+                                return next;
                         }
 
                         return value;
