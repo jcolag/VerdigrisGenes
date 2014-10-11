@@ -25,6 +25,12 @@ namespace VerdigrisGenes
                         this.grammar = new Grammar();
                 }
 
+                /// <summary>
+                /// Replaces the chromosomes.
+                /// </summary>
+                /// <returns>The chromosomes.</returns>
+                /// <param name="genes">The genes.</param>
+                /// <returns>Number of chromosomes parsed.</returns>
                 public int ReplaceChromosomes(string genes)
                 {
                         return this.grammar.ReplaceChromosomes(genes);

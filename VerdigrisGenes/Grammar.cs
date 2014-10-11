@@ -13,13 +13,25 @@ namespace VerdigrisGenes
         /// </summary>
         public class Grammar
         {
-                private readonly string[] chromosomeNames = {
+                /// <summary>
+                /// The chromosome names.
+                /// </summary>
+                private readonly string[] chromosomeNames =
+                {
                         "Number",
                         "Variable",
                         "Initialized",
                         "Production"
                 };
 
+                /// <summary>
+                /// The symbol table.
+                /// </summary>
+                private readonly List<Variable> symbolTable = new List<Variable>();
+
+                /// <summary>
+                /// The number generator.
+                /// </summary>
                 private NumberGenerator ng;
 
                 /// <summary>
@@ -33,11 +45,6 @@ namespace VerdigrisGenes
                 private int declaredVariables = 0;
 
                 /// <summary>
-                /// The symbol table.
-                /// </summary>
-                private List<Variable> symbolTable = new List<Variable>();
-
-                /// <summary>
                 /// Initializes a new instance of the <see cref="VerdigrisGenes.Grammar"/> class.
                 /// </summary>
                 public Grammar()
@@ -46,18 +53,25 @@ namespace VerdigrisGenes
                         this.ng = new NumberGenerator();
                 }
 
+                /// <summary>
+                /// Replaces the chromosomes.
+                /// </summary>
+                /// <returns>The chromosomes.</returns>
+                /// <param name="genes">The genes to parse into chromosomes.</param>
+                /// <returns>Number of chromosomes parsed.</returns>
                 public int ReplaceChromosomes(string genes)
                 {
                         char[] nl = { '\n', '\r' };
                         string[] lines = genes.Split(nl);
                         int index = 0;
 
-                        foreach (string name in chromosomeNames)
+                        foreach (string name in this.chromosomeNames)
                         {
                                 string line = lines[index];
                                 ++index;
                                 this.ng.Load(name, line);
                         }
+
                         return lines.Length;
                 }
 
@@ -146,11 +160,11 @@ namespace VerdigrisGenes
                                 case "@Declare":
                                         ++this.declaredVariables;
                                         string name = "v" + this.declaredVariables.ToString();
-                                        symbolTable.Add(new Variable(name));
+                                        this.symbolTable.Add(new Variable(name));
                                         return name;
                                 case "@Variable":
-                                        which = this.ng.Next("Variable", symbolTable.Count);
-                                        v = symbolTable[which];
+                                        which = this.ng.Next("Variable", this.symbolTable.Count);
+                                        v = this.symbolTable[which];
                                         v.ToInitialize = true;
                                         return v.Name;
                                 case "@Initialized":
@@ -175,7 +189,7 @@ namespace VerdigrisGenes
                         }
 
                         List<GrammarExpression> options = this.productions[k];
-                        if (symbolTable.FindAll(var=>var.Initialized).Count == 0)
+                        if (this.symbolTable.FindAll(var => var.Initialized).Count == 0)
                         {
                                 options = options.FindAll(ge => !ge.ReqValue);
                         }
@@ -212,7 +226,7 @@ namespace VerdigrisGenes
                                 {
                                         if (part == ";")
                                         {
-                                                foreach (Variable v in symbolTable)
+                                                foreach (Variable v in this.symbolTable)
                                                 {
                                                         v.Update();
                                                 }

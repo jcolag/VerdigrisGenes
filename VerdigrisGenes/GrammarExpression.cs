@@ -6,6 +6,9 @@ namespace VerdigrisGenes
 {
         using System;
 
+        /// <summary>
+        /// Grammar expression.
+        /// </summary>
         public class GrammarExpression
         {
                 /// <summary>
@@ -26,7 +29,7 @@ namespace VerdigrisGenes
                 /// <summary>
                 /// Initializes a new instance of the <see cref="VerdigrisGenes.GrammarExpression"/> class.
                 /// </summary>
-                /// <param name="expr">Expr.</param>
+                /// <param name="expr">Grammar production's expression.</param>
                 /// <param name="needValue">If set to <c>true</c> need value.</param>
                 /// <param name="init">If set to <c>true</c> init.</param>
                 public GrammarExpression(string expr, bool needValue, bool init)

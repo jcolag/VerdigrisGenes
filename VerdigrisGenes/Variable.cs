@@ -6,6 +6,9 @@ namespace VerdigrisGenes
 {
         using System;
 
+        /// <summary>
+        /// Program Variable.
+        /// </summary>
         public class Variable
         {
                 /// <summary>
@@ -26,7 +29,7 @@ namespace VerdigrisGenes
                 /// <summary>
                 /// Initializes a new instance of the <see cref="VerdigrisGenes.Variable"/> class.
                 /// </summary>
-                /// <param name="name">Name.</param>
+                /// <param name="name">Name of the variable.</param>
                 public Variable(string name)
                 {
                         this.name = name;
