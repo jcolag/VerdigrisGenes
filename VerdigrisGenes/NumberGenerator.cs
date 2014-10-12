@@ -104,5 +104,15 @@ namespace VerdigrisGenes
                 {
                         return this.Next(name) % max;
                 }
+
+                /// <summary>
+                /// Dump the gene with the specified name.
+                /// </summary>
+                /// <param name="name">The desired chromosome name.</param>
+                /// <returns>The chromosome data.</returns>
+                public string Dump(string name)
+                {
+                        return !this.chromosomes.ContainsKey(name) ? string.Empty : this.chromosomes[name].Dump();
+                }
         }
 }

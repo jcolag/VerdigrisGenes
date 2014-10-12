@@ -51,6 +51,10 @@ namespace VerdigrisGenes
                 {
                         this.productions = new Dictionary<string, List<GrammarExpression>>();
                         this.ng = new NumberGenerator();
+                        foreach (string name in this.chromosomeNames)
+                        {
+                                this.ng.Load(name, new List<int>());
+                        }
                 }
 
                 /// <summary>
@@ -243,6 +247,22 @@ namespace VerdigrisGenes
                         }
 
                         return result.Trim();
+                }
+
+                /// <summary>
+                /// Dumps the chromosomes.
+                /// </summary>
+                /// <returns>The chromosomes.</returns>
+                public string DumpChromosomes()
+                {
+                        string output = string.Empty;
+
+                        foreach (string name in this.chromosomeNames)
+                        {
+                                output += Environment.NewLine + "#" + name + ": " + this.ng.Dump(name);
+                        }
+
+                        return output;
                 }
         }
 }

@@ -43,6 +43,7 @@ namespace Turwin
 
                         string program = verd.GenerateProgram("Program");
                         Console.WriteLine(program.Replace(" ;", nl).Replace(nl + " ", nl));
+                        Console.WriteLine(verd.DumpChromosomes());
                 }
         }
 }

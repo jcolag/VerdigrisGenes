@@ -66,5 +66,14 @@ namespace VerdigrisGenes
                 {
                         return this.grammar.Fill(startstate);
                 }
+
+                /// <summary>
+                /// Dumps the chromosomes.
+                /// </summary>
+                /// <returns>The chromosomes.</returns>
+                public string DumpChromosomes()
+                {
+                        return this.grammar.DumpChromosomes();
+                }
         }
 }
