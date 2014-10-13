@@ -58,6 +58,27 @@ namespace VerdigrisGenes
                 }
 
                 /// <summary>
+                /// Parses the grammar.
+                /// </summary>
+                /// <returns>The grammar.</returns>
+                /// <param name="productions">The grammar productions.</param>
+                public int ParseGrammar(string productions)
+                {
+                        string newline = Environment.NewLine;
+                        string separation = newline + newline;
+                        string[] prods = Regex.Split(productions, separation);
+                        int count = 0;
+
+                        foreach (string p in prods)
+                        {
+                                this.Add(p);
+                                ++count;
+                        }
+
+                        return count;
+                }
+
+                /// <summary>
                 /// Replaces the chromosomes.
                 /// </summary>
                 /// <returns>The chromosomes.</returns>

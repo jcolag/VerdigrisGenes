@@ -26,6 +26,15 @@ namespace VerdigrisGenes
                 }
 
                 /// <summary>
+                /// Initializes a new instance of the <see cref="VerdigrisGenes.Verdigris"/> class.
+                /// </summary>
+                /// <param name="g">The grammar component.</param>
+                public Verdigris(Grammar g)
+                {
+                        this.grammar = g;
+                }
+
+                /// <summary>
                 /// Replaces the chromosomes.
                 /// </summary>
                 /// <returns>The chromosomes.</returns>
@@ -43,18 +52,7 @@ namespace VerdigrisGenes
                 /// <param name="productions">The grammar productions.</param>
                 public int ParseGrammar(string productions)
                 {
-                        string newline = Environment.NewLine;
-                        string separation = newline + newline;
-                        string[] prods = Regex.Split(productions, separation);
-                        int count = 0;
-
-                        foreach (string p in prods)
-                        {
-                                this.grammar.Add(p);
-                                ++count;
-                        }
-
-                        return count;
+                        return this.grammar.ParseGrammar(productions);
                 }
 
                 /// <summary>
