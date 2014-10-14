@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Turwin", "Turwin\Turwin.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerdigrisGenes", "VerdigrisGenes\VerdigrisGenes.csproj", "{7F6DA9B5-D2A7-496B-B9A9-196191FA7C47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interpreter", "Interpreter\Interpreter.csproj", "{A2541856-FFD4-4F38-8287-AB23A8351291}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -19,6 +21,10 @@ Global
 		{7F6DA9B5-D2A7-496B-B9A9-196191FA7C47}.Debug|x86.Build.0 = Debug|Any CPU
 		{7F6DA9B5-D2A7-496B-B9A9-196191FA7C47}.Release|x86.ActiveCfg = Release|Any CPU
 		{7F6DA9B5-D2A7-496B-B9A9-196191FA7C47}.Release|x86.Build.0 = Release|Any CPU
+		{A2541856-FFD4-4F38-8287-AB23A8351291}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A2541856-FFD4-4F38-8287-AB23A8351291}.Debug|x86.Build.0 = Debug|Any CPU
+		{A2541856-FFD4-4F38-8287-AB23A8351291}.Release|x86.ActiveCfg = Release|Any CPU
+		{A2541856-FFD4-4F38-8287-AB23A8351291}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Turwin\Turwin.csproj
