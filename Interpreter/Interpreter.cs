@@ -11,9 +11,12 @@ namespace Interpreter
         {
                 private List<Statement> program;
 
+                private Dictionary<string, int> symbolTable;
+
                 public Interpreter()
                 {
                         program = new List<Statement>();
+                        symbolTable = new Dictionary<string, int>();
                 }
 
                 public bool Parse(string program)
@@ -26,14 +29,19 @@ namespace Interpreter
                         {
                                 var s = new Statement();
                                 bool nest = s.Parse(line);
-                                if (nesting.Count == 0)
+                                if (s.Type != StatementType.Comment
+                                        && s.Type != StatementType.Define
+                                        && s.Type != StatementType.End)
                                 {
-                                        this.program.Add(s);
-                                }
-                                else
-                                {
-                                        Statement ctrl = nesting.Peek();
-                                        ctrl.Nest(s);
+                                        if (nesting.Count == 0)
+                                        {
+                                                this.program.Add(s);
+                                        }
+                                        else
+                                        {
+                                                Statement ctrl = nesting.Peek();
+                                                ctrl.Nest(s);
+                                        }
                                 }
 
                                 if (nest)
