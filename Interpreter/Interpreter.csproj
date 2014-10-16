@@ -34,6 +34,7 @@
     <Compile Include="Interpreter.cs" />
     <Compile Include="Statement.cs" />
     <Compile Include="StatementType.cs" />
+    <Compile Include="LexicalElement.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
