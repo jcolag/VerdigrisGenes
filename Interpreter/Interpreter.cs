@@ -24,14 +24,24 @@ namespace Interpreter
                         var nesting = new Stack<Statement>();
                         string[] nl = { Environment.NewLine };
                         string[] lines = program.Split(nl, StringSplitOptions.RemoveEmptyEntries);
+                        int linenumber = 0;
 
                         foreach (string line in lines)
                         {
                                 var s = new Statement();
                                 bool nest = s.Parse(line);
+
+                                ++linenumber;
+                                if (!s.Valid)
+                                {
+                                        Console.WriteLine("Syntax error on line #" + linenumber.ToString());
+                                        Console.WriteLine("\t" + s.Text);
+                                }
+
                                 if (s.Type != StatementType.Comment
                                         && s.Type != StatementType.Define
-                                        && s.Type != StatementType.End)
+                                        && s.Type != StatementType.End
+                                        && s.Valid)
                                 {
                                         if (nesting.Count == 0)
                                         {
@@ -41,6 +51,14 @@ namespace Interpreter
                                         {
                                                 Statement ctrl = nesting.Peek();
                                                 ctrl.Nest(s);
+                                        }
+                                }
+
+                                if (s.Type == StatementType.Define)
+                                {
+                                        foreach (string name in s.VarList)
+                                        {
+                                                this.symbolTable.Add(name, 0);
                                         }
                                 }
 

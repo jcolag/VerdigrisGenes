@@ -11,6 +11,8 @@ namespace Interpreter
         {
                 private List<Statement> nest;
 
+                private string text;
+
                 private bool isNestable = false;
 
                 private bool isLoop = false;
@@ -30,12 +32,24 @@ namespace Interpreter
                         this.nest = new List<Statement>();
                         this.varList = new List<string>();
                         this.elements = new Dictionary<LexicalElement, string>();
+                        this.text = string.Empty;
                 }
 
                 public Statement(string line)
                 {
                         this.nest = new List<Statement>();
                         this.Parse(line);
+                        this.varList = new List<string>();
+                        this.elements = new Dictionary<LexicalElement, string>();
+                        this.text = line;
+                }
+
+                public string Text
+                {
+                        get
+                        {
+                                return this.text;
+                        }
                 }
 
                 public bool IsLoop
@@ -66,7 +80,7 @@ namespace Interpreter
                 {
                         get
                         {
-                                return varList;
+                                return this.varList;
                         }
                 }
 
