@@ -41,5 +41,9 @@
       <Project>{7F6DA9B5-D2A7-496B-B9A9-196191FA7C47}</Project>
       <Name>VerdigrisGenes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Interpreter\Interpreter.csproj">
+      <Project>{A2541856-FFD4-4F38-8287-AB23A8351291}</Project>
+      <Name>Interpreter</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

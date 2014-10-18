@@ -9,9 +9,9 @@ namespace Interpreter
 
         public class Interpreter
         {
-                private List<Statement> program;
+                private readonly List<Statement> program;
 
-                private Dictionary<string, int> symbolTable;
+                private readonly Dictionary<string, int> symbolTable;
 
                 public Interpreter()
                 {
@@ -84,8 +84,14 @@ namespace Interpreter
 
                 public bool Go()
                 {
-                        return true;
+                        bool status = true;
+
+                        foreach (Statement s in program)
+                        {
+                                status &= s.Go(symbolTable);
+                        }
+
+                        return status;
                 }
         }
 }
-

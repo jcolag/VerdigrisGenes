@@ -114,8 +114,8 @@ namespace Interpreter
 
                 public bool Parse(string line)
                 {
-                        string[] nl = { Environment.NewLine };
-                        string[] tokens = line.ToLower().Split(nl, StringSplitOptions.RemoveEmptyEntries);
+                        string[] space = { Environment.NewLine, " ", "\t" };
+                        string[] tokens = line.ToLower().Split(space, StringSplitOptions.RemoveEmptyEntries);
                         bool block = false;
                         int index = 1;
 
@@ -138,7 +138,7 @@ namespace Interpreter
                                         }
 
                                         varList.Add(tokens[index++]);
-                                        cont = Statement.Match(",", tokens[index++]);
+                                        cont = tokens.Length > index && Statement.Match(",", tokens[index++]);
                                 }
                                 break;
                         case "input":
@@ -165,17 +165,17 @@ namespace Interpreter
                                 }
 
                                 this.malformed &= tokens.Length < 6 || !Statement.Match("<-", tokens[2]);
-                                if (Statement.MatchVariableOrNumber(tokens[3]))
+                                if (tokens.Length > 3 && Statement.MatchVariableOrNumber(tokens[3]))
                                 {
                                         this.elements.Add(LexicalElement.LeftOperand, tokens[3]);
                                 }
 
-                                if (Statement.MatchArithmetic(tokens[4]))
+                                if (tokens.Length > 4 && Statement.MatchArithmetic(tokens[4]))
                                 {
                                         this.elements.Add(LexicalElement.Operator, tokens[4]);
                                 }
 
-                                if (Statement.MatchVariableOrNumber(tokens[5]))
+                                if (tokens.Length > 5 && Statement.MatchVariableOrNumber(tokens[5]))
                                 {
                                         this.elements.Add(LexicalElement.RightOperand, tokens[5]);
                                 }
@@ -210,17 +210,17 @@ namespace Interpreter
                                 this.malformed &= tokens.Length < 6
                                         || !Statement.Match("(", tokens[1])
                                         || !Statement.Match(")", tokens[5]);
-                                if (Statement.MatchVariableOrNumber(tokens[2]))
+                                if (tokens.Length > 2 && Statement.MatchVariableOrNumber(tokens[2]))
                                 {
                                         this.elements.Add(LexicalElement.LeftOperand, tokens[2]);
                                 }
 
-                                if (Statement.MatchBoolean(tokens[3]))
+                                if (tokens.Length > 3 && Statement.MatchBoolean(tokens[3]))
                                 {
                                         this.elements.Add(LexicalElement.Operator, tokens[3]);
                                 }
 
-                                if (Statement.MatchVariableOrNumber(tokens[4]))
+                                if (tokens.Length > 4 && Statement.MatchVariableOrNumber(tokens[4]))
                                 {
                                         this.elements.Add(LexicalElement.RightOperand, tokens[4]);
                                 }
@@ -244,6 +244,118 @@ namespace Interpreter
                 public void Nest(Statement item)
                 {
                         this.nest.Add(item);
+                }
+
+                public bool Go(Dictionary<string, int> symbols)
+                {
+                        string varname;
+                        int val;
+                        bool status = true;
+
+                        switch (this.type)
+                        {
+                        case StatementType.Output:
+                                varname = this.elements[LexicalElement.Target];
+                                Console.WriteLine(symbols[varname].ToString());
+                                break;
+                        case StatementType.Input:
+                                varname = this.elements[LexicalElement.Target];
+                                Console.Write(varname + ": ");
+                                string input = Console.ReadLine();
+                                status = int.TryParse(input, out val);
+                                symbols[varname] = val;
+                                break;
+                        case StatementType.Assign:
+                                varname = this.elements[LexicalElement.Target];
+                                symbols[varname] = this.EvaluateExpression(symbols);
+                                break;
+                        case StatementType.Conditional:
+                                if (this.EvaluateExpression(symbols) == 1)
+                                {
+                                        foreach (Statement s in this.nest)
+                                        {
+                                                status &= s.Go(symbols);
+                                        }
+                                }
+
+                                break;
+                        case StatementType.Loop:
+                                while (this.EvaluateExpression(symbols) == 1)
+                                {
+                                        foreach (Statement s in this.nest)
+                                        {
+                                                status &= s.Go(symbols);
+                                        }
+                                }
+
+                                break;
+                        }
+
+                        return status;
+                }
+
+                private static int ValueFromName(string varname, IDictionary<string, int> symbols)
+                {
+                        int result = 0;
+
+                        if (char.IsLetter(varname[0]))
+                        {
+                                result = symbols[varname];
+                        }
+                        else
+                        {
+                                int.TryParse(varname, out result);
+                        }
+
+                        return result;
+                }
+
+                private int EvaluateExpression(Dictionary<string, int> symbols)
+                {
+                        string op1name, op2name, oper;
+                        int op1, op2, val = 0;
+
+                        op1name = this.elements[LexicalElement.LeftOperand];
+                        op2name = this.elements[LexicalElement.RightOperand];
+                        oper = this.elements[LexicalElement.Operator];
+                        op1 = Statement.ValueFromName(op1name, symbols);
+                        op2 = Statement.ValueFromName(op2name, symbols);
+
+                        switch(oper)
+                        {
+                        case "+":
+                                val = op1 + op2;
+                                break;
+                        case "-":
+                                val = op1 - op2;
+                                break;
+                        case "*":
+                                val = op1 * op2;
+                                break;
+                        case "/":
+                                val = op1 / op2;
+                                break;
+                        case "%":
+                                val = op1 % op2;
+                                break;
+                        case "<":
+                                val = op1 < op2 ? 1 : 0;
+                                break;
+                        case "<=":
+                                val = op1 <= op2 ? 1 : 0;
+                                break;
+                        case "=":
+                                val = op1 == op2 ? 1 : 0;
+                                break;
+                        case ">=":
+                                val = op1 >= op2 ? 1 : 0;
+                                break;
+                        case ">":
+                                val = op1 > op2 ? 1 : 0;
+                                break;
+                        }
+
+                        return val;
                 }
 
                 private static bool Match(string target, string input)
@@ -281,7 +393,7 @@ namespace Interpreter
 
                 private static bool MatchArithmetic(string op)
                 {
-                        var ops = new List<string>(){ "+", "-", "*", "/" };
+                        var ops = new List<string>(){ "+", "-", "*", "/", "%" };
                         return ops.Contains(op);
                 }
 
@@ -292,4 +404,3 @@ namespace Interpreter
                 }
         }
 }
-
