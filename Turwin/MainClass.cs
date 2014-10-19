@@ -20,6 +20,7 @@ namespace Turwin
                 public static void Main(string[] args)
                 {
                         var verd = new Verdigris();
+                        var terp = new Interpreter.Interpreter();
                         string nl = Environment.NewLine;
 
                         if (args.Length == 0)
@@ -42,8 +43,12 @@ namespace Turwin
                         }
 
                         string program = verd.GenerateProgram("Program");
-                        Console.WriteLine(program.Replace(" ;", nl).Replace(nl + " ", nl));
+                        program = program.Replace(" ;", nl).Replace(nl + " ", nl);
+                        Console.WriteLine(program);
                         Console.WriteLine(verd.DumpChromosomes());
+
+                        terp.Parse(program);
+                        terp.Go();
                 }
         }
 }
