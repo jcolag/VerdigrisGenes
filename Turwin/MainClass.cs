@@ -5,6 +5,7 @@
 namespace Turwin
 {
         using System;
+        using System.Collections.Generic;
         using System.IO;
         using VerdigrisGenes;
 
@@ -19,8 +20,9 @@ namespace Turwin
                 /// <param name="args">The command-line arguments.</param>
                 public static void Main(string[] args)
                 {
+                        var stdin = new List<int>() { 720 };
                         var verd = new Verdigris();
-                        var terp = new Interpreter.Interpreter();
+                        var terp = new Interpreter.Interpreter(stdin);
                         string nl = Environment.NewLine;
 
                         if (args.Length == 0)
@@ -49,6 +51,10 @@ namespace Turwin
 
                         terp.Parse(program);
                         terp.Go();
+                        foreach (int x in terp.Outputs)
+                        {
+                                Console.WriteLine(x);
+                        }
                 }
         }
 }

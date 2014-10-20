@@ -246,7 +246,7 @@ namespace Interpreter
                         this.nest.Add(item);
                 }
 
-                public bool Go(Dictionary<string, int> symbols)
+                public bool Go(Dictionary<string, int> symbols, Queue<int> inputs, List<int> outputs)
                 {
                         string varname;
                         int val;
@@ -256,13 +256,34 @@ namespace Interpreter
                         {
                         case StatementType.Output:
                                 varname = this.elements[LexicalElement.Target];
-                                Console.WriteLine(symbols[varname].ToString());
+                                if (outputs == null)
+                                {
+                                        Console.WriteLine(symbols[varname].ToString());
+                                }
+                                else
+                                {
+                                        outputs.Add(symbols[varname]);
+                                }
+
                                 break;
                         case StatementType.Input:
                                 varname = this.elements[LexicalElement.Target];
-                                Console.Write(varname + ": ");
-                                string input = Console.ReadLine();
-                                status = int.TryParse(input, out val);
+                                if (inputs == null)
+                                {
+                                        Console.Write(varname + ": ");
+                                        string input = Console.ReadLine();
+                                        status = int.TryParse(input, out val);
+                                }
+                                else if (inputs.Count > 0)
+                                {
+                                        val = inputs.Dequeue();
+                                }
+                                else
+                                {
+                                        val = 0;
+                                        status = false;
+                                }
+
                                 symbols[varname] = val;
                                 break;
                         case StatementType.Assign:
@@ -274,7 +295,7 @@ namespace Interpreter
                                 {
                                         foreach (Statement s in this.nest)
                                         {
-                                                status &= s.Go(symbols);
+                                                status &= s.Go(symbols, inputs, outputs);
                                         }
                                 }
 
@@ -284,7 +305,7 @@ namespace Interpreter
                                 {
                                         foreach (Statement s in this.nest)
                                         {
-                                                status &= s.Go(symbols);
+                                                status &= s.Go(symbols, inputs, outputs);
                                         }
                                 }
 
@@ -353,6 +374,9 @@ namespace Interpreter
                         case ">":
                                 val = op1 > op2 ? 1 : 0;
                                 break;
+                        case "!=":
+                                val = op1 != op2 ? 1 : 0;
+                                break;
                         }
 
                         return val;
@@ -399,7 +423,7 @@ namespace Interpreter
 
                 private static bool MatchBoolean(string op)
                 {
-                        var ops = new List<string>(){ "<", "<=", "=", ">=", ">" };
+                        var ops = new List<string>(){ "<", "<=", "=", ">=", ">", "!=" };
                         return ops.Contains(op);
                 }
         }

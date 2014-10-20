@@ -13,10 +13,24 @@ namespace Interpreter
 
                 private readonly Dictionary<string, int> symbolTable;
 
-                public Interpreter()
+                private readonly Queue<int> inputs;
+
+                private readonly List<int> outputs;
+
+                public Interpreter(List<int> inputs)
                 {
                         program = new List<Statement>();
                         symbolTable = new Dictionary<string, int>();
+                        this.inputs = inputs == null ? null : new Queue<int>(inputs);
+                        this.outputs = new List<int>();
+                }
+
+                public List<int> Outputs
+                {
+                        get
+                        {
+                                return this.outputs;
+                        }
                 }
 
                 public bool Parse(string program)
@@ -86,9 +100,10 @@ namespace Interpreter
                 {
                         bool status = true;
 
+                        this.outputs.Clear();
                         foreach (Statement s in program)
                         {
-                                status &= s.Go(symbolTable);
+                                status &= s.Go(this.symbolTable, this.inputs, this.outputs);
                         }
 
                         return status;
