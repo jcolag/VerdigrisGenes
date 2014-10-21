@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerdigrisGenes", "Verdigris
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interpreter", "Interpreter\Interpreter.csproj", "{A2541856-FFD4-4F38-8287-AB23A8351291}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fitness", "Fitness\Fitness.csproj", "{5F62BB67-CAF9-404B-BCC0-09938CBA7C33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -17,6 +19,10 @@ Global
 		{09CC950E-2C35-45CA-99C5-E5FD515A2C02}.Debug|x86.Build.0 = Debug|x86
 		{09CC950E-2C35-45CA-99C5-E5FD515A2C02}.Release|x86.ActiveCfg = Release|x86
 		{09CC950E-2C35-45CA-99C5-E5FD515A2C02}.Release|x86.Build.0 = Release|x86
+		{5F62BB67-CAF9-404B-BCC0-09938CBA7C33}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F62BB67-CAF9-404B-BCC0-09938CBA7C33}.Debug|x86.Build.0 = Debug|Any CPU
+		{5F62BB67-CAF9-404B-BCC0-09938CBA7C33}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F62BB67-CAF9-404B-BCC0-09938CBA7C33}.Release|x86.Build.0 = Release|Any CPU
 		{7F6DA9B5-D2A7-496B-B9A9-196191FA7C47}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{7F6DA9B5-D2A7-496B-B9A9-196191FA7C47}.Debug|x86.Build.0 = Debug|Any CPU
 		{7F6DA9B5-D2A7-496B-B9A9-196191FA7C47}.Release|x86.ActiveCfg = Release|Any CPU

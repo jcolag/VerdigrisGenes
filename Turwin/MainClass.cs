@@ -7,7 +7,7 @@ namespace Turwin
         using System;
         using System.Collections.Generic;
         using System.IO;
-        using VerdigrisGenes;
+        using Fitness;
 
         /// <summary>
         /// Main class.
@@ -21,9 +21,10 @@ namespace Turwin
                 public static void Main(string[] args)
                 {
                         var stdin = new List<int>() { 720 };
-                        var verd = new Verdigris();
-                        var terp = new Interpreter.Interpreter(stdin);
+                        var stdout = new List<int>() { 2, 2, 2, 2, 3, 3, 5 };
+                        FitnessSelector fit;
                         string nl = Environment.NewLine;
+                        string genometext = string.Empty;
 
                         if (args.Length == 0)
                         {
@@ -34,27 +35,18 @@ namespace Turwin
                         var input = File.OpenText(args[0]);
                         var grammartext = input.ReadToEnd();
                         input.Close();
-                        verd.ParseGrammar(grammartext);
 
                         if (args.Length > 1)
                         {
                                 input = File.OpenText(args[1]);
-                                var genometext = input.ReadToEnd();
+                                genometext = input.ReadToEnd();
                                 input.Close();
-                                verd.ReplaceChromosomes(genometext);
                         }
 
-                        string program = verd.GenerateProgram("Program");
-                        program = program.Replace(" ;", nl).Replace(nl + " ", nl);
-                        Console.WriteLine(program);
-                        Console.WriteLine(verd.DumpChromosomes());
-
-                        terp.Parse(program);
-                        terp.Go();
-                        foreach (int x in terp.Outputs)
-                        {
-                                Console.WriteLine(x);
-                        }
+                        fit = new FitnessSelector(grammartext, genometext, stdin, stdout);
+                        fit.Execute();
+                        bool accept = fit.Evaluate(90.0);
+                        Console.WriteLine(accept.ToString() + ": " + fit.Rating.ToString() + "%");
                 }
         }
 }
