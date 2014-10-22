@@ -26,7 +26,7 @@ To reiterate the status, _VerdigrisGenes_ only generates a random program, at th
     Declare ::= define Varlist ;
     
     Varlist ::= @Declare
-        | @Declare Varlist
+        | @Declare , Varlist
     
     Code ::= Statement ;
         | Statement ; Code
@@ -48,14 +48,15 @@ To reiterate the status, _VerdigrisGenes_ only generates a random program, at th
         | =
         | <=
         | <
+        | !=
     
-    Expr ::= Value
-        | Value Op Value
+    Expr ::= Value Op Value
     
     Op ::= +
         | -
         | *
         | /
+        | %
     
     Value ::= @Number
         | @Initialized # init
@@ -207,7 +208,7 @@ The effect is that a genome file such as this...
     0 0 1 0 0 1 0 0 1 0 0 1 0 0 1
     0 0 1 1 1 1 1 1 1 1 0 1 3 0 0 0 1 0 0 1 0 0 0 3 0 0 0 1 1 1 4 0 0 1 3 0 1 2 1 0 2 1 0 4 0 0 0 3 0 0 1 0 4 0 0 0 0 1 1 0 0 1
 
-...now reliably produces...
+...reliably produces...
 
     define v1 v2 v3 v4 v5 v6 v7 v8 v9
     if ( 2 >= 3 )
@@ -226,7 +227,7 @@ The effect is that a genome file such as this...
         end if
     end while
 
-
+Or at least something similar, subject to the precise grammar used.  Change the grammar (which I have since writing this), and it becomes almost an entirely different program.
 
 Future Path
 -----------
@@ -237,11 +238,13 @@ I'll mostly go whereever there seems to be something interesting, but things tha
 
  - [X] Hook the selection of program elements to genes.
 
- - [ ] Write an interpreter for the language.
+ - [X] Write an interpreter for the language.
+
+ - [ ] Increase the scope/context sensitivity of code generation, in particular loop bodies changing loop conditions.
 
  - [ ] "Pretty-print" the output programs.
 
- - [ ] Build a test harness that can take input-output pairs to determine a fitness value.
+ - [X] Build a test harness that can take input-output pairs to determine a fitness value.
 
  - [ ] Determine a reproductive model for the programs.  Single- or double-stranded?  Inherit by strand or by gene?  If double-stranded, a dominance model is necessary.
 
