@@ -35,6 +35,18 @@ namespace VerdigrisGenes
                 }
 
                 /// <summary>
+                /// Gets the grammar.
+                /// </summary>
+                /// <value>The grammar.</value>
+                protected Grammar Grammar
+                {
+                        get
+                        {
+                                return this.grammar;
+                        }
+                }
+
+                /// <summary>
                 /// Replaces the chromosomes.
                 /// </summary>
                 /// <returns>The chromosomes.</returns>
@@ -72,6 +84,17 @@ namespace VerdigrisGenes
                 public string DumpChromosomes()
                 {
                         return this.grammar.DumpChromosomes();
+                }
+
+                /// <summary>
+                /// Mate with the specified programmer.
+                /// </summary>
+                /// <param name="mate">The mate.</param>
+                /// <returns>The new programmer.</returns>
+                public Verdigris Mate(Verdigris mate)
+                {
+                        Grammar g = this.grammar.Mate(mate.Grammar);
+                        return new Verdigris(g);
                 }
         }
 }

@@ -58,6 +58,29 @@ namespace VerdigrisGenes
                 }
 
                 /// <summary>
+                /// Initializes a new instance of the <see cref="VerdigrisGenes.Grammar"/> class.
+                /// </summary>
+                /// <param name="gen">The number generator to use.</param>
+                /// <param name="prod">The grammar productions.</param>
+                protected Grammar(NumberGenerator gen, Dictionary<string, List<GrammarExpression>> prod)
+                {
+                        this.productions = prod;
+                        this.ng = gen;
+                }
+
+                /// <summary>
+                /// Gets the number generator.
+                /// </summary>
+                /// <value>The generator.</value>
+                protected NumberGenerator Generator
+                {
+                        get
+                        {
+                                return this.ng;
+                        }
+                }
+
+                /// <summary>
                 /// Parses the grammar.
                 /// </summary>
                 /// <returns>The grammar.</returns>
@@ -284,6 +307,24 @@ namespace VerdigrisGenes
                         }
 
                         return output;
+                }
+
+                /// <summary>
+                /// Mate with the specified program generator.
+                /// </summary>
+                /// <param name="mate">The mate.</param>
+                public Grammar Mate(Grammar mate)
+                {
+                        NumberGenerator gen = mate.Generator;
+                        var child = new NumberGenerator();
+
+                        foreach (string name in this.chromosomeNames)
+                        {
+                                List<int> chrom = this.ng.Mate(name, gen.Retrieve(name));
+                                child.Load(name, chrom);
+                        }
+
+                        return new Grammar(child, this.productions);
                 }
         }
 }

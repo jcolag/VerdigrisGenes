@@ -114,5 +114,56 @@ namespace VerdigrisGenes
                 {
                         return !this.chromosomes.ContainsKey(name) ? string.Empty : this.chromosomes[name].Dump();
                 }
+
+                /// <summary>
+                /// Retrieve the chromosome with the specified name.
+                /// </summary>
+                /// <param name="name">The chromosome's name.</param>
+                public List<int> Retrieve(string name)
+                {
+                        return new List<int>(this.chromosomes[name].Retrieve());
+                }
+
+                /// <summary>
+                /// Mate the specified name and genes.
+                /// Note:  This is not biologically correct.
+                /// </summary>
+                /// <param name="name">The chromosome's name.</param>
+                /// <param name="genes">The partner's genes.</param>
+                public List<int> Mate(string name, List<int> genes)
+                {
+                        var child = new List<int>();
+                        List<int> spouse = this.chromosomes[name].Retrieve();
+                        int i = 0;
+                        int j = 0;
+
+                        if (spouse == null)
+                        {
+                                return child;
+                        }
+
+                        while (i < genes.Count && j < spouse.Count)
+                        {
+                                switch (this.rand.Next(4))
+                                {
+                                case 0:
+                                        child.Add(genes[i]);
+                                        ++i;
+                                        break;
+                                case 1:
+                                        child.Add(spouse[j]);
+                                        ++j;
+                                        break;
+                                case 2:
+                                        ++i;
+                                        break;
+                                case 3:
+                                        ++j;
+                                        break;
+                                }
+                        }
+
+                        return child;
+                }
         }
 }

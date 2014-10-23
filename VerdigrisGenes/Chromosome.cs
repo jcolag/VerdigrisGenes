@@ -37,6 +37,16 @@ namespace VerdigrisGenes
                 }
 
                 /// <summary>
+                /// Initializes a new instance of the <see cref="VerdigrisGenes.Chromosome"/> class.
+                /// </summary>
+                /// <param name="source">Source chromosomes.</param>
+                public Chromosome(List<int> source)
+                {
+                        this.genes = new List<int>(source);
+                        this.index = 0;
+                }
+
+                /// <summary>
                 /// Gets a value indicating whether this instance has changed.
                 /// </summary>
                 /// <value><c>true</c> if this instance has changed; otherwise, <c>false</c>.</value>
@@ -92,6 +102,15 @@ namespace VerdigrisGenes
                         }
 
                         return chr.Trim();
+                }
+
+                /// <summary>
+                /// Retrieve this instance's content.
+                /// </summary>
+                /// <returns>The genes.</returns>
+                public List<int> Retrieve()
+                {
+                        return new List<int>(this.genes);
                 }
         }
 }
