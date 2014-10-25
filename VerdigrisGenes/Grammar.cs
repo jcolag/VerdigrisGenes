@@ -313,6 +313,7 @@ namespace VerdigrisGenes
                 /// Mate with the specified program generator.
                 /// </summary>
                 /// <param name="mate">The mate.</param>
+                /// <returns>Grammar set with combined chromosomes.</returns>
                 public Grammar Mate(Grammar mate)
                 {
                         NumberGenerator gen = mate.Generator;

@@ -119,6 +119,7 @@ namespace VerdigrisGenes
                 /// Retrieve the chromosome with the specified name.
                 /// </summary>
                 /// <param name="name">The chromosome's name.</param>
+                /// <returns>Copy of the chromosome list.</returns>
                 public List<int> Retrieve(string name)
                 {
                         return new List<int>(this.chromosomes[name].Retrieve());
@@ -130,6 +131,7 @@ namespace VerdigrisGenes
                 /// </summary>
                 /// <param name="name">The chromosome's name.</param>
                 /// <param name="genes">The partner's genes.</param>
+                /// <returns>Combined chromsomal list.</returns>
                 public List<int> Mate(string name, List<int> genes)
                 {
                         var child = new List<int>();
