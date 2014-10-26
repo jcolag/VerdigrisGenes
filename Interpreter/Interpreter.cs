@@ -7,24 +7,47 @@ namespace Interpreter
         using System;
         using System.Collections.Generic;
 
+        /// <summary>
+        /// The program interpreter.
+        /// </summary>
         public class Interpreter
         {
+                /// <summary>
+                /// The program.
+                /// </summary>
                 private readonly List<Statement> program;
 
+                /// <summary>
+                /// The symbol table.
+                /// </summary>
                 private readonly Dictionary<string, int> symbolTable;
 
+                /// <summary>
+                /// The inputs.
+                /// </summary>
                 private readonly Queue<int> inputs;
 
+                /// <summary>
+                /// The outputs.
+                /// </summary>
                 private readonly List<int> outputs;
 
+                /// <summary>
+                /// Initializes a new instance of the <see cref="Interpreter"/> class.
+                /// </summary>
+                /// <param name="inputs">Expected program inputs.</param>
                 public Interpreter(List<int> inputs)
                 {
-                        program = new List<Statement>();
-                        symbolTable = new Dictionary<string, int>();
+                        this.program = new List<Statement>();
+                        this.symbolTable = new Dictionary<string, int>();
                         this.inputs = inputs == null ? null : new Queue<int>(inputs);
                         this.outputs = new List<int>();
                 }
 
+                /// <summary>
+                /// Gets the outputs.
+                /// </summary>
+                /// <value>The outputs.</value>
                 public List<int> Outputs
                 {
                         get
@@ -33,6 +56,11 @@ namespace Interpreter
                         }
                 }
 
+                /// <summary>
+                /// Parse the specified program.
+                /// </summary>
+                /// <param name="program">Program text.</param>
+                /// <returns><c>true</c> if the parse succeeds; otherwise, <c>false</c>.</returns>
                 public bool Parse(string program)
                 {
                         var nesting = new Stack<Statement>();
@@ -96,12 +124,16 @@ namespace Interpreter
                         return true;
                 }
 
+                /// <summary>
+                /// Execute the program.
+                /// </summary>
+                /// <returns><c>true</c> if the execution succeds; otherwise, <c>false</c>.</returns>
                 public bool Go()
                 {
                         bool status = true;
 
                         this.outputs.Clear();
-                        foreach (Statement s in program)
+                        foreach (Statement s in this.program)
                         {
                                 status &= s.Go(this.symbolTable, this.inputs, this.outputs);
                         }

@@ -1,4 +1,4 @@
-﻿// <copyright file="Interpreter.cs" company="John Colagioia">
+﻿// <copyright file="Statement.cs" company="John Colagioia">
 //     John.Colagioia.net. Licensed under the GPLv3
 // </copyright>
 // <author>John Colagioia</author>
@@ -7,26 +7,59 @@ namespace Interpreter
         using System;
         using System.Collections.Generic;
 
+        /// <summary>
+        /// Program statement.
+        /// </summary>
         public class Statement
         {
+                /// <summary>
+                /// The nested statements.
+                /// </summary>
                 private List<Statement> nest;
 
+                /// <summary>
+                /// The statement text.
+                /// </summary>
                 private string text;
 
+                /// <summary>
+                /// Whether this kind of statement is nestable.
+                /// </summary>
                 private bool isNestable = false;
 
+                /// <summary>
+                /// Whether this kind of (nestable) statement is a loop.
+                /// </summary>
                 private bool isLoop = false;
 
+                /// <summary>
+                /// Whether this kind of statement is a nesting endpoint.
+                /// </summary>
                 private bool isEnd = false;
 
+                /// <summary>
+                /// Whether the statement was malformed.
+                /// </summary>
                 private bool malformed = false;
 
+                /// <summary>
+                /// The type of statement.
+                /// </summary>
                 private StatementType type = StatementType.Unknown;
 
+                /// <summary>
+                /// The variable list.
+                /// </summary>
                 private List<string> varList;
 
+                /// <summary>
+                /// The lexical elements.
+                /// </summary>
                 private Dictionary<LexicalElement, string> elements;
 
+                /// <summary>
+                /// Initializes a new instance of the <see cref="Statement"/> class.
+                /// </summary>
                 public Statement()
                 {
                         this.nest = new List<Statement>();
@@ -35,6 +68,10 @@ namespace Interpreter
                         this.text = string.Empty;
                 }
 
+                /// <summary>
+                /// Initializes a new instance of the <see cref="Statement"/> class.
+                /// </summary>
+                /// <param name="line">Line of program.</param>
                 public Statement(string line)
                 {
                         this.nest = new List<Statement>();
@@ -44,6 +81,10 @@ namespace Interpreter
                         this.text = line;
                 }
 
+                /// <summary>
+                /// Gets the text.
+                /// </summary>
+                /// <value>The text.</value>
                 public string Text
                 {
                         get
@@ -52,6 +93,10 @@ namespace Interpreter
                         }
                 }
 
+                /// <summary>
+                /// Gets a value indicating whether this instance is loop.
+                /// </summary>
+                /// <value><c>true</c> if this instance is a loop; otherwise, <c>false</c>.</value>
                 public bool IsLoop
                 {
                         get
@@ -60,6 +105,10 @@ namespace Interpreter
                         }
                 }
 
+                /// <summary>
+                /// Gets a value indicating whether this instance is an end.
+                /// </summary>
+                /// <value><c>true</c> if this instance is end; otherwise, <c>false</c>.</value>
                 public bool IsEnd
                 {
                         get
@@ -68,6 +117,10 @@ namespace Interpreter
                         }
                 }
 
+                /// <summary>
+                /// Gets the type of statement.
+                /// </summary>
+                /// <value>The type.</value>
                 public StatementType Type
                 {
                         get
@@ -76,6 +129,10 @@ namespace Interpreter
                         }
                 }
 
+                /// <summary>
+                /// Gets the variable list.
+                /// </summary>
+                /// <value>The variable list.</value>
                 public List<string> VarList
                 {
                         get
@@ -84,6 +141,10 @@ namespace Interpreter
                         }
                 }
 
+                /// <summary>
+                /// Gets a value indicating whether this <see cref="Statement"/> is valid.
+                /// </summary>
+                /// <value><c>true</c> if valid; otherwise, <c>false</c>.</value>
                 public bool Valid
                 {
                         get
@@ -93,25 +154,31 @@ namespace Interpreter
                                 {
                                 case StatementType.Input:
                                 case StatementType.Output:
-                                        ok &= elements.ContainsKey(LexicalElement.Target);
+                                        ok &= this.elements.ContainsKey(LexicalElement.Target);
                                         break;
                                 case StatementType.Conditional:
                                 case StatementType.Loop:
-                                        ok &= elements.ContainsKey(LexicalElement.LeftOperand);
-                                        ok &= elements.ContainsKey(LexicalElement.Operator);
-                                        ok &= elements.ContainsKey(LexicalElement.RightOperand);
+                                        ok &= this.elements.ContainsKey(LexicalElement.LeftOperand);
+                                        ok &= this.elements.ContainsKey(LexicalElement.Operator);
+                                        ok &= this.elements.ContainsKey(LexicalElement.RightOperand);
                                         break;
                                 case StatementType.Assign:
-                                        ok &= elements.ContainsKey(LexicalElement.Target);
-                                        ok &= elements.ContainsKey(LexicalElement.LeftOperand);
-                                        ok &= elements.ContainsKey(LexicalElement.Operator);
-                                        ok &= elements.ContainsKey(LexicalElement.RightOperand);
+                                        ok &= this.elements.ContainsKey(LexicalElement.Target);
+                                        ok &= this.elements.ContainsKey(LexicalElement.LeftOperand);
+                                        ok &= this.elements.ContainsKey(LexicalElement.Operator);
+                                        ok &= this.elements.ContainsKey(LexicalElement.RightOperand);
                                         break;
                                 }
+
                                 return ok;
                         }
                 }
 
+                /// <summary>
+                /// Parse the specified line.
+                /// </summary>
+                /// <param name="line">Line of program.</param>
+                /// <returns><c>true</c> if the parse succeeded; otherwise, <c>false</c>.</returns>
                 public bool Parse(string line)
                 {
                         string[] space = { Environment.NewLine, " ", "\t" };
@@ -124,7 +191,7 @@ namespace Interpreter
                                 return false;
                         }
 
-                        switch(tokens[0])
+                        switch (tokens[0])
                         {
                         case "define":
                                 bool cont = true;
@@ -137,9 +204,10 @@ namespace Interpreter
                                                 break;
                                         }
 
-                                        varList.Add(tokens[index++]);
+                                        this.varList.Add(tokens[index++]);
                                         cont = tokens.Length > index && Statement.Match(",", tokens[index++]);
                                 }
+
                                 break;
                         case "input":
                                 this.type = StatementType.Input;
@@ -241,11 +309,22 @@ namespace Interpreter
                         return this.isNestable;
                 }
 
+                /// <summary>
+                /// Nest the specified statement.
+                /// </summary>
+                /// <param name="item">Statement to insert.</param>
                 public void Nest(Statement item)
                 {
                         this.nest.Add(item);
                 }
 
+                /// <summary>
+                /// Execute this statement, given a symbol table and (optional) inputs.
+                /// </summary>
+                /// <param name="symbols">Symbol table.</param>
+                /// <param name="inputs">Program inputs, optional.</param>
+                /// <param name="outputs">Program outputs, used if inputs provided.</param>
+                /// <returns><c>true</c> if successful; otherwise, <c>false</c>.</returns>
                 public bool Go(Dictionary<string, int> symbols, Queue<int> inputs, List<int> outputs)
                 {
                         string varname;
@@ -315,6 +394,12 @@ namespace Interpreter
                         return status;
                 }
 
+                /// <summary>
+                /// Determines the appropriate value to use based on the input string.
+                /// </summary>
+                /// <returns>The value.</returns>
+                /// <param name="varname">Variable name or string representing an integer.</param>
+                /// <param name="symbols">Symbol table.</param>
                 private static int ValueFromName(string varname, IDictionary<string, int> symbols)
                 {
                         int result = 0;
@@ -331,6 +416,82 @@ namespace Interpreter
                         return result;
                 }
 
+                /// <summary>
+                /// Match the specified target with input.
+                /// </summary>
+                /// <param name="target">Target string.</param>
+                /// <param name="input">Input string.</param>
+                /// <returns>><c>true</c> if the strings match; otherwise, <c>false</c>.</returns>
+                private static bool Match(string target, string input)
+                {
+                        return target == input;
+                }
+
+                /// <summary>
+                /// Matches that the input string is a valid variable name.
+                /// </summary>
+                /// <returns><c>true</c>, if variable name was matched, <c>false</c> otherwise.</returns>
+                /// <param name="name">Candidate variable name.</param>
+                private static bool MatchVariable(string name)
+                {
+                        bool goodname = true;
+                        foreach (char c in name)
+                        {
+                                goodname &= char.IsLetterOrDigit(c);
+                        }
+
+                        return goodname;
+                }
+
+                /// <summary>
+                /// Matches that the input string is a variable or number.
+                /// </summary>
+                /// <returns><c>true</c>, if variable or number was matched, <c>false</c> otherwise.</returns>
+                /// <param name="name">Candidate variable name or numerical string.</param>
+                private static bool MatchVariableOrNumber(string name)
+                {
+                        bool goodname = true;
+
+                        if (char.IsLetter(name[0]))
+                        {
+                                return Statement.MatchVariable(name);
+                        }
+
+                        foreach (char c in name)
+                        {
+                                goodname &= char.IsDigit(c);
+                        }
+
+                        return goodname;
+                }
+
+                /// <summary>
+                /// Matches an arithmetic operator.
+                /// </summary>
+                /// <returns><c>true</c>, if arithmetic operator was matched, <c>false</c> otherwise.</returns>
+                /// <param name="op">The operation.</param>
+                private static bool MatchArithmetic(string op)
+                {
+                        var ops = new List<string>() { "+", "-", "*", "/", "%" };
+                        return ops.Contains(op);
+                }
+
+                /// <summary>
+                /// Matches a boolean operator.
+                /// </summary>
+                /// <returns><c>true</c>, if boolean operator was matched, <c>false</c> otherwise.</returns>
+                /// <param name="op">The operation.</param>
+                private static bool MatchBoolean(string op)
+                {
+                        var ops = new List<string>() { "<", "<=", "=", ">=", ">", "!=" };
+                        return ops.Contains(op);
+                }
+
+                /// <summary>
+                /// Evaluates the expression.
+                /// </summary>
+                /// <returns>The expression.</returns>
+                /// <param name="symbols">Symbol table.</param>
                 private int EvaluateExpression(Dictionary<string, int> symbols)
                 {
                         string op1name, op2name, oper;
@@ -342,7 +503,7 @@ namespace Interpreter
                         op1 = Statement.ValueFromName(op1name, symbols);
                         op2 = Statement.ValueFromName(op2name, symbols);
 
-                        switch(oper)
+                        switch (oper)
                         {
                         case "+":
                                 val = op1 + op2;
@@ -380,51 +541,6 @@ namespace Interpreter
                         }
 
                         return val;
-                }
-
-                private static bool Match(string target, string input)
-                {
-                        return target == input;
-                }
-
-                private static bool MatchVariable(string name)
-                {
-                        bool goodname = true;
-                        foreach (char c in name)
-                        {
-                                goodname &= char.IsLetterOrDigit(c);
-                        }
-
-                        return goodname;
-                }
-
-                private static bool MatchVariableOrNumber(string name)
-                {
-                        bool goodname = true;
-
-                        if (char.IsLetter(name[0]))
-                        {
-                                return Statement.MatchVariable(name);
-                        }
-
-                        foreach (char c in name)
-                        {
-                                goodname &= char.IsDigit(c);
-                        }
-
-                        return goodname;
-                }
-
-                private static bool MatchArithmetic(string op)
-                {
-                        var ops = new List<string>(){ "+", "-", "*", "/", "%" };
-                        return ops.Contains(op);
-                }
-
-                private static bool MatchBoolean(string op)
-                {
-                        var ops = new List<string>(){ "<", "<=", "=", ">=", ">", "!=" };
-                        return ops.Contains(op);
                 }
         }
 }
