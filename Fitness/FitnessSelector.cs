@@ -12,7 +12,7 @@ namespace Fitness
         /// <summary>
         /// Fitness selector.
         /// </summary>
-        public class FitnessSelector
+        public class FitnessSelector: IComparable
         {
                 /// <summary>
                 /// The expected outputs.
@@ -120,6 +120,28 @@ namespace Fitness
                         this.rating = score * 100.0;
                         return this.rating >= threshold;
                 }
+
+                #region IComparable implementation
+
+                /// <summary>
+                /// Compares this object to another.
+                /// </summary>
+                /// <returns>The comparison.</returns>
+                /// <param name="obj">The object to compare.</param>
+                public int CompareTo(object obj)
+                {
+                        if (!(obj is FitnessSelector))
+                        {
+                                throw new NotImplementedException();
+                        }
+
+                        var b = (FitnessSelector)obj;
+                        double thisval = this.Rating;
+                        double thatval = b.Rating;
+                        return thatval.CompareTo(thisval);
+                }
+
+                #endregion
 
                 /// <summary>
                 /// Evaluate the specified result, expected and score.
