@@ -240,7 +240,9 @@ I'll mostly go whereever there seems to be something interesting, but things tha
 
  - [X] Write an interpreter for the language.
 
- - [ ] Increase the scope/context sensitivity of code generation, in particular loop bodies changing loop conditions.
+ - [ ] Increase the scope/context sensitivity of code generation, in particular loop bodies changing loop conditions.  Obviously, we can't evaluate the fitness of infinite loops.
+
+ - [ ] In cases where infinite loops can't be avoided, a maximum number of instructions or iterations might be worth instituting.
 
  - [ ] "Pretty-print" the output programs.
 
