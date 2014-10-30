@@ -327,6 +327,16 @@ namespace Interpreter
                 /// <returns><c>true</c> if successful; otherwise, <c>false</c>.</returns>
                 public bool Go(Dictionary<string, int> symbols, Queue<int> inputs, List<int> outputs)
                 {
+                        return this.Go(symbols, inputs, outputs, null);
+                }
+
+                /// <summary>
+                /// Execute this statement, given a symbol table and (optional) inputs.
+                /// </summary>
+                /// <param name="symbols">Symbol table.</param>
+                /// <param name="inputs">Program inputs, optional.</param>
+                /// <param name="outputs">Program outputs, used if inputs provided.</param>
+                /// <param name="max">Maximum iterations in loops.</param> 
                         string varname;
                         int val;
                         bool status = true;
@@ -385,6 +395,7 @@ namespace Interpreter
                                         foreach (Statement s in this.nest)
                                         {
                                                 status &= s.Go(symbols, inputs, outputs);
+                                                status &= s.Go(symbols, inputs, outputs, max);
                                         }
                                 }
 
@@ -515,10 +526,24 @@ namespace Interpreter
                                 val = op1 * op2;
                                 break;
                         case "/":
-                                val = op1 / op2;
+                                if (op2 == 0)
+                                {
+                                        val = 0;
+                                }
+                                else
+                                {
+                                        val = op1 / op2;
+                                }
                                 break;
                         case "%":
-                                val = op1 % op2;
+                                if (op2 == 0)
+                                {
+                                        val = 0;
+                                }
+                                else
+                                {
+                                        val = op1 % op2;
+                                }
                                 break;
                         case "<":
                                 val = op1 < op2 ? 1 : 0;
