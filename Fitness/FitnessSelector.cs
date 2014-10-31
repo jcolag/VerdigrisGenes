@@ -88,7 +88,16 @@ namespace Fitness
                 /// </summary>
                 public void Execute()
                 {
-                        this.executed = this.terp.Go();
+                        this.Execute(null);
+                }
+
+                /// <summary>
+                /// Execute this instance's program.
+                /// <param name="iterations">Maximum number of loop iterations.</param>
+                /// </summary>
+                public void Execute(int? iterations)
+                {
+                        this.executed = this.terp.Go(iterations);
                 }
 
                 /// <summary>

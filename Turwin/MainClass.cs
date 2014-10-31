@@ -17,7 +17,12 @@ namespace Turwin
                 /// <summary>
                 /// The population size.
                 /// </summary>
-                private const int population = 100;
+                private const int population = 10000;
+
+                /// <summary>
+                /// The maximum number of loop iterations for the interpreter.
+                /// </summary>
+                private const int maxiterations = 1;
 
                 /// <summary>
                 /// The entry point of the program, where the program control starts and ends.
@@ -30,7 +35,7 @@ namespace Turwin
                         var fit = new List<FitnessSelector>();
                         string nl = Environment.NewLine;
                         string genometext = string.Empty;
-                        double threshold = 0.0;
+                        double threshold = double.Epsilon;
 
                         if (args.Length == 0)
                         {
@@ -53,7 +58,7 @@ namespace Turwin
                         {
                                 var f = new FitnessSelector(grammartext, genometext, stdin, stdout);
                                 genometext = string.Empty;
-                                f.Execute();
+                                f.Execute(maxiterations);
                                 f.Evaluate(threshold);
                                 fit.Add(f);
                                 bool accept = f.Rating >= threshold;
@@ -69,6 +74,9 @@ namespace Turwin
                                         break;
                                 }
                         }
+
+                        Console.WriteLine("Number of runs that exceed the threshold of " + threshold.ToString()
+                                + ":  " + fit.Count.ToString());
                 }
         }
 }

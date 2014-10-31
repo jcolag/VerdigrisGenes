@@ -337,6 +337,9 @@ namespace Interpreter
                 /// <param name="inputs">Program inputs, optional.</param>
                 /// <param name="outputs">Program outputs, used if inputs provided.</param>
                 /// <param name="max">Maximum iterations in loops.</param> 
+                /// <returns><c>true</c> if successful; otherwise, <c>false</c>.</returns>
+                public bool Go(Dictionary<string, int> symbols, Queue<int> inputs, List<int> outputs, int? max)
+                {
                         string varname;
                         int val;
                         bool status = true;
@@ -390,13 +393,30 @@ namespace Interpreter
 
                                 break;
                         case StatementType.Loop:
+                                int iterations = 1;
+
+                                if (max != null)
+                                {
+                                        iterations = (int)max;
+                                }
+
                                 while (this.EvaluateExpression(symbols) == 1)
                                 {
                                         foreach (Statement s in this.nest)
                                         {
-                                                status &= s.Go(symbols, inputs, outputs);
                                                 status &= s.Go(symbols, inputs, outputs, max);
                                         }
+
+                                        if (iterations <= 0)
+                                        {
+                                                break;
+                                        }
+
+                                        if (max != null)
+                                        {
+                                                --iterations;
+                                        }
+                                        break;
                                 }
 
                                 break;

@@ -130,12 +130,22 @@ namespace Interpreter
                 /// <returns><c>true</c> if the execution succeds; otherwise, <c>false</c>.</returns>
                 public bool Go()
                 {
+                        return this.Go(null);
+                }
+
+                /// <summary>
+                /// Execute the program.
+                /// </summary>
+                /// <param name="iterations">Maximum number of loop iterations.</param>
+                /// <returns><c>true</c> if the execution succeds; otherwise, <c>false</c>.</returns>
+                public bool Go(int? iterations)
+                {
                         bool status = true;
 
                         this.outputs.Clear();
                         foreach (Statement s in this.program)
                         {
-                                status &= s.Go(this.symbolTable, this.inputs, this.outputs);
+                                status &= s.Go(this.symbolTable, this.inputs, this.outputs, iterations);
                         }
 
                         return status;
