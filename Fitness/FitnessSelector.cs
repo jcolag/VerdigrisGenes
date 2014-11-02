@@ -15,24 +15,29 @@ namespace Fitness
         public class FitnessSelector: IComparable
         {
                 /// <summary>
+                /// The program inputs.
+                /// </summary>
+                private List<int> inputs;
+
+                /// <summary>
                 /// The expected outputs.
                 /// </summary>
-                private readonly List<int> outputs;
+                private List<int> outputs;
 
                 /// <summary>
                 /// The program genome.
                 /// </summary>
-                private readonly Verdigris genome;
+                private Verdigris genome;
 
                 /// <summary>
                 /// The interpreter.
                 /// </summary>
-                private readonly Interpreter terp;
+                private Interpreter terp;
 
                 /// <summary>
                 /// The program.
                 /// </summary>
-                private readonly string program;
+                private string program;
 
                 /// <summary>
                 /// Whether the program has been executed.
@@ -53,10 +58,6 @@ namespace Fitness
                 /// <param name="outputs">Expected outputs.</param>
                 public FitnessSelector(string grammar, string initialGenome, List<int> inputs, List<int> outputs)
                 {
-                        string nl = Environment.NewLine;
-
-                        this.outputs = new List<int>(outputs);
-                        this.terp = new Interpreter(inputs);
                         this.genome = new Verdigris();
                         this.genome.ParseGrammar(grammar);
                         if (!string.IsNullOrWhiteSpace(initialGenome))
@@ -64,11 +65,13 @@ namespace Fitness
                                 this.genome.ReplaceChromosomes(initialGenome);
                         }
 
-                        this.program = this.genome.GenerateProgram("Program");
-                        this.program = this.program.Replace(" ;", nl).Replace(nl + " ", nl);
-                        this.terp.Parse(this.program);
+                        GenerateProgram(inputs, outputs);
+                }
 
-                        this.executed = false;
+                public FitnessSelector(Verdigris verdigris, List<int> inputs, List<int> outputs)
+                {
+                        this.genome = verdigris;
+                        GenerateProgram(inputs, outputs);
                 }
 
                 /// <summary>
@@ -80,6 +83,18 @@ namespace Fitness
                         get
                         {
                                 return this.rating;
+                        }
+                }
+
+                /// <summary>
+                /// Gets the program.
+                /// </summary>
+                /// <value>The program.</value>
+                public string Program
+                {
+                        get
+                        {
+                                return this.program;
                         }
                 }
 
@@ -128,6 +143,12 @@ namespace Fitness
                         // It's a keeper if it's at least threshold-% "right"
                         this.rating = score * 100.0;
                         return this.rating >= threshold;
+                }
+
+                public FitnessSelector Mate(FitnessSelector partner)
+                {
+                        Verdigris partnerVerd = this.genome.Mate(partner.genome);
+                        return new FitnessSelector(partnerVerd, this.inputs, this.outputs);
                 }
 
                 #region IComparable implementation
@@ -190,6 +211,25 @@ namespace Fitness
                         }
 
                         return count;
+                }
+
+                /// <summary>
+                /// Generates the program.
+                /// </summary>
+                /// <param name="invalues">Input values.</param>
+                /// <param name="outvalues">Output values.</param>
+                private void GenerateProgram(List<int> invalues, List<int> outvalues)
+                {
+                        string nl = Environment.NewLine;
+
+                        this.inputs = new List<int>(invalues);
+                        this.outputs = new List<int>(outvalues);
+                        this.terp = new Interpreter(invalues);
+
+                        this.program = this.genome.GenerateProgram("Program");
+                        this.program = this.program.Replace(" ;", nl).Replace(nl + " ", nl);
+                        this.terp.Parse(this.program);
+                        this.executed = false;
                 }
         }
 }
