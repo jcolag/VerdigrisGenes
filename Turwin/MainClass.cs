@@ -30,8 +30,8 @@ namespace Turwin
                 /// <param name="args">The command-line arguments.</param>
                 public static void Main(string[] args)
                 {
-                        var stdin = new List<int>() { 720 };
-                        var stdout = new List<int>() { 2, 2, 2, 2, 3, 3, 5 };
+                        var stdin = new List<int>() { 5 };
+                        var stdout = new List<int>() { 6 };
                         var fit = new List<FitnessSelector>();
                         string nl = Environment.NewLine;
                         string genometext = string.Empty;
