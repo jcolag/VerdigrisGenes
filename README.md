@@ -240,15 +240,17 @@ I'll mostly go whereever there seems to be something interesting, but things tha
 
  - [X] Write an interpreter for the language.
 
+ - [ ] Generalize input and output sets for more thorough evaluation.
+
  - [ ] Increase the scope/context sensitivity of code generation, in particular loop bodies changing loop conditions.  Obviously, we can't evaluate the fitness of infinite loops.
 
- - [ ] In cases where infinite loops can't be avoided, a maximum number of instructions or iterations might be worth instituting.
+ - [X] In cases where infinite loops can't be avoided, a maximum number of instructions or iterations might be worth instituting.
 
  - [ ] "Pretty-print" the output programs.
 
  - [X] Build a test harness that can take input-output pairs to determine a fitness value.
 
- - [ ] Determine a reproductive model for the programs.  Single- or double-stranded?  Inherit by strand or by gene?  If double-stranded, a dominance model is necessary.
+ - [X] Determine a reproductive model for the programs.  Single- or double-stranded?  Inherit by strand or by gene?  If double-stranded, a dominance model is necessary.  (The resulting model might be a bit too "out there," so this may not be permanent.)
 
  - [ ] Build a mutation model that fits everything else.
 
