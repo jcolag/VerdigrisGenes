@@ -183,7 +183,7 @@ namespace Fitness
                 private static double Evaluate(int result, int expected, double score)
                 {
                         double diff = Math.Abs((double)result - (double)expected);
-                        double exp = Math.Abs((double)expected);
+                        double exp = Math.Max(Math.Abs((double)expected), Math.Abs((double)result));
                         double component = diff / exp;
                         if (component > 1.0)
                         {
