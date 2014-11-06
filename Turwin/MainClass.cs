@@ -44,7 +44,7 @@ namespace Turwin
 
                         if (args.Length == 0)
                         {
-                                Console.WriteLine("Requires a parameter indicating a grammar file and a genome file.");
+                                Console.WriteLine("Requires a parameter indicating a grammar file.");
                                 return;
                         }
 
