@@ -252,6 +252,8 @@ I'll mostly go whereever there seems to be something interesting, but things tha
 
  - [X] Determine a reproductive model for the programs.  Single- or double-stranded?  Inherit by strand or by gene?  If double-stranded, a dominance model is necessary.  (The resulting model might be a bit too "out there," so this may not be permanent.)
 
+ - [ ] Improve the reproductive model.  Even for the simplest possible programs and minimal tests, advancement appears to come more from random generation than combination.
+
  - [ ] Build a mutation model that fits everything else.
 
 So...a lot.
