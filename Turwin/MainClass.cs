@@ -67,10 +67,14 @@ namespace Turwin
 
                                 threshold = fit[parents - 1].Rating;
                                 generation += 1;
+                                if (generation % 25 == 0)
+                                {
+                                        Console.WriteLine("# " + generation.ToString());
+                                }
                         }
-                        while (generation < MainClass.maxgenerations && fit.Count >= 1 && fit[0].Rating < 100);
+                        while (fit.Count >= 1 && fit[0].Rating < 100);
 
-                        Console.WriteLine("# Best program");
+                        Console.WriteLine("# Best program after " + generation.ToString() + " generations.");
                         Console.WriteLine(fit[0].Program);
                 }
 
